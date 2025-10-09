@@ -1,6 +1,5 @@
 # ---------------------------------------------------------
 # File: data_transformation.py
-# Author: Kaleb Kebede
 # Purpose: Transform cleaned data into JSON for MongoDB ingestion
 # ---------------------------------------------------------
 

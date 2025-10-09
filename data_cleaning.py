@@ -1,6 +1,5 @@
 # ---------------------------------------------------------
 # File: data_cleaning.py
-# Author: Kaleb Kebede
 # Purpose: Clean missing data, fix types, and standardize values
 # ---------------------------------------------------------
 
