@@ -11,7 +11,7 @@ def normalize_id(name):
     """Generate lowercase alphanumeric player_id."""
     return re.sub(r'[^a-z0-9]', '_', name.lower())
 
-def transform_to_json(input_file="nba_cleansed.csv", output_file="nba_ready.json"):
+def transform_to_jsonl(input_file="data/staging/nba_cleansed.csv", output_file="data/curated/nba_ready.jsonl"):
     df = pd.read_csv(input_file)
     print("Loaded cleansed dataset:", df.shape)
 
@@ -36,10 +36,11 @@ def transform_to_json(input_file="nba_cleansed.csv", output_file="nba_ready.json
         records.append(record)
 
     with open(output_file, "w") as f:
-        json.dump(records, f, indent=4)
+        for record in records:
+            f.write(json.dumps(record) + '\n')
 
     print(f"✅ Saved transformed JSON to {output_file}")
     print(f"Total records exported: {len(records)}")
 
 if __name__ == "__main__":
-    transform_to_json()
+    transform_to_jsonl()

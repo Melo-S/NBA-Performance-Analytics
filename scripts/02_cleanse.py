@@ -5,7 +5,7 @@
 
 import pandas as pd
 
-def clean_data(input_file="nba_reduced.csv", output_file="nba_cleansed.csv"):
+def clean_data(input_file="data/staging/nba_reduced.csv", output_file="data/staging/nba_cleansed.csv"):
     df = pd.read_csv(input_file)
     print("Loaded reduced dataset:", df.shape)
 

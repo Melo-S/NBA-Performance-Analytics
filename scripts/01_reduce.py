@@ -5,7 +5,7 @@
 
 import pandas as pd
 
-def reduce_data(raw_file="nba_raw.csv", output_file="nba_reduced.csv"):
+def reduce_data(raw_file="data/raw/nba_raw.csv", output_file="data/staging/nba_reduced.csv"):
     # Load raw dataset
     df = pd.read_csv(raw_file)
     print("Initial dataset size:", df.shape)
