@@ -1,41 +1,50 @@
-# NBA Performance Analytics
-
-This project provides a data pipeline to process raw NBA player statistics into a cleaned JSON format suitable for MongoDB ingestion.
-
-## Data Pipeline
-
-1. **Data Reduction** (`data_reduction.py`): Filters raw NBA data to essential columns, seasons from 2010 onward.
-2. **Data Cleaning** (`data_cleaning.py`): Handles missing values, normalizes data types, standardizes names.
-3. **Data Transformation** (`data_transformation.py`): Converts cleaned CSV to JSON with structured player records for database insertion.
+This project provides a data pipeline to process raw NBA player statistics into a cleaned JSONL format suitable for MongoDB ingestion.
 
 ## Prerequisites
 
 - Python 3.x
 - pandas library: `pip install pandas`
+- pymongo library: `pip install pymongo`
+- MongoDB Community Edition installed and running on localhost:27017
 
-## Usage
+## Data Pipeline
 
-1. Place `nba_raw.csv` in the project root.
-2. Run the pipeline:
-   ```bash
-   python data_reduction.py
-   python data_cleaning.py
-   python data_transformation.py
-   ```
-3. Outputs:
-   - `nba_reduced.csv`: Reduced dataset
-   - `nba_cleansed.csv`: Cleaned dataset
-   - `nba_ready.json`: JSON for MongoDB
+Note: Do not open or fully read raw CSVs; scripts stream with chunksize.
+
+Process data (streaming)
+
+python scripts/01_reduce.py
+python scripts/02_cleanse.py
+python scripts/03_transform_to_jsonl.py
+
+Mongo indexes and import
+
+mongosh < create-indexes.js
+
+mongoimport --db nba --collection player_game_stats \
+  --file data/curated/nba_ready.jsonl --type json \
+  --maintainInsertionOrder --stopOnError \
+  --errorFile docs/import_errors.jsonl
+
+Validate
+
+python scripts/04_validate.py
+
+## Outputs
+
+- `data/staging/nba_reduced.csv`: Reduced dataset
+- `data/staging/nba_cleansed.csv`: Cleaned dataset
+- `data/curated/nba_ready.jsonl`: JSONL for MongoDB
+- `docs/import_errors.jsonl`: Import errors (should be empty or tiny)
 
 ## Data Structure
 
-Each JSON record contains:
+Each JSONL record contains:
 - `player_id`: Normalized player identifier
 - `player_name`: Player's name
 - `season`: Season year
 - `team`: Team name
 - `stats`: Dictionary of performance stats (points, rebounds, etc.)
-- `playoffs_flag`: Boolean indicating playoffs
 
 ## Authors
 ## Data Titans Team

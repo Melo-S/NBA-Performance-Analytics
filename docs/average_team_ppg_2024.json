@@ -1,0 +1,130 @@
+[
+  {
+    "team": "CHO",
+    "avg_ppg": 9.3
+  },
+  {
+    "team": "UTA",
+    "avg_ppg": 9.26
+  },
+  {
+    "team": "ATL",
+    "avg_ppg": 9.21
+  },
+  {
+    "team": "CHI",
+    "avg_ppg": 8.96
+  },
+  {
+    "team": "POR",
+    "avg_ppg": 8.94
+  },
+  {
+    "team": "CLE",
+    "avg_ppg": 8.89
+  },
+  {
+    "team": "HOU",
+    "avg_ppg": 8.83
+  },
+  {
+    "team": "MIA",
+    "avg_ppg": 8.8
+  },
+  {
+    "team": "MEM",
+    "avg_ppg": 8.61
+  },
+  {
+    "team": "BOS",
+    "avg_ppg": 8.53
+  },
+  {
+    "team": "DAL",
+    "avg_ppg": 8.47
+  },
+  {
+    "team": "DET",
+    "avg_ppg": 8.33
+  },
+  {
+    "team": "IND",
+    "avg_ppg": 8.32
+  },
+  {
+    "team": "BRK",
+    "avg_ppg": 8.3
+  },
+  {
+    "team": "TOR",
+    "avg_ppg": 8.27
+  },
+  {
+    "team": "SAS",
+    "avg_ppg": 8.25
+  },
+  {
+    "team": "GSW",
+    "avg_ppg": 8.2
+  },
+  {
+    "team": "DEN",
+    "avg_ppg": 8.04
+  },
+  {
+    "team": "WAS",
+    "avg_ppg": 7.8
+  },
+  {
+    "team": "NOP",
+    "avg_ppg": 7.75
+  },
+  {
+    "team": "ORL",
+    "avg_ppg": 7.67
+  },
+  {
+    "team": "LAC",
+    "avg_ppg": 7.65
+  },
+  {
+    "team": "MIN",
+    "avg_ppg": 7.5
+  },
+  {
+    "team": "PHO",
+    "avg_ppg": 7.48
+  },
+  {
+    "team": "NYK",
+    "avg_ppg": 7.44
+  },
+  {
+    "team": "PHI",
+    "avg_ppg": 7.28
+  },
+  {
+    "team": "MIL",
+    "avg_ppg": 7.28
+  },
+  {
+    "team": "LAL",
+    "avg_ppg": 7.25
+  },
+  {
+    "team": "2TM",
+    "avg_ppg": 7.23
+  },
+  {
+    "team": "SAC",
+    "avg_ppg": 7.14
+  },
+  {
+    "team": "OKC",
+    "avg_ppg": 6.89
+  },
+  {
+    "team": "3TM",
+    "avg_ppg": 4.14
+  }
+]

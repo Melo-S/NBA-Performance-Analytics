@@ -1,0 +1,62 @@
+[
+  {
+    "player_id": "joel-embiid",
+    "player_name": "Joel Embiid",
+    "team": "PHI",
+    "ppg": 34.7
+  },
+  {
+    "player_id": "luka-don-i",
+    "player_name": "Luka Don\u010di\u0107",
+    "team": "DAL",
+    "ppg": 33.9
+  },
+  {
+    "player_id": "giannis-antetokounmpo",
+    "player_name": "Giannis Antetokounmpo",
+    "team": "MIL",
+    "ppg": 30.4
+  },
+  {
+    "player_id": "shai-gilgeous-alexander",
+    "player_name": "Shai Gilgeous-Alexander",
+    "team": "OKC",
+    "ppg": 30.1
+  },
+  {
+    "player_id": "jalen-brunson",
+    "player_name": "Jalen Brunson",
+    "team": "NYK",
+    "ppg": 28.7
+  },
+  {
+    "player_id": "devin-booker",
+    "player_name": "Devin Booker",
+    "team": "PHO",
+    "ppg": 27.1
+  },
+  {
+    "player_id": "kevin-durant",
+    "player_name": "Kevin Durant",
+    "team": "PHO",
+    "ppg": 27.1
+  },
+  {
+    "player_id": "jayson-tatum",
+    "player_name": "Jayson Tatum",
+    "team": "BOS",
+    "ppg": 26.9
+  },
+  {
+    "player_id": "de-aaron-fox",
+    "player_name": "De'Aaron Fox",
+    "team": "SAC",
+    "ppg": 26.6
+  },
+  {
+    "player_id": "donovan-mitchell",
+    "player_name": "Donovan Mitchell",
+    "team": "CLE",
+    "ppg": 26.6
+  }
+]
