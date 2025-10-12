@@ -1,0 +1,111 @@
+Project Milestone 2 Draft – NBA Player Performance Analytics
+
+Team Name: Data Titans
+
+Team Members: Kaleb Kebede, Melvin Sanare, Taylor Tran, Heskiyas Wondaferew
+
+Data Preparation
+
+To prep the data for this project, we had to reduce, cleanse, and transform the dataset. Using python, we created scripts in order to complete this.
+
+Reduce: We started by reducing the original raw NBA dataset to only have the most important player performance columns such as player name, team, points per game, rebounds, assists, turnovers, minutes, and field goal percentages. The raw data had a lot of unnecessary attributes, so the script keeps only essential ones and renames them to make it easier to understand. We filtered the data to only have seasons from 2010 and onward and removed duplicate records. The result is the final reduced file.
+The pseudo code for this is:
+
+load("data/raw/nba_raw.csv")
+keep ["player", "team", "season", "pts_per_game", "trb_per_game", "ast_per_game","tov_per_game", "mp_per_game", "fg_percent"]
+rename columns to ["player_name", "team", "season", "points", "rebounds", "assists", "turnovers", "minutes", "fg_pct"]
+filter season >= 2010
+drop duplicates
+save("data/staging/nba_reduced.csv")
+
+Cleanse: Next, the reduced dataset was cleaned and standardized. The reason we did this was to make sure all the player statistics were complete, consistent, and formatted correctly so we could transform the csv into JSON. The script loads in the reduced dataset and fills in any missing/incomplete data. Any missing numeric values get filled with a 0, and missing team names are filled with "unknown team". Field goal percentages above 1 were converted to decimal form, and the minutes column was converted to type int. Invalid values outside of 0-1 were removed. The final result is the cleansed dataset that needs to be saved.
+The pseudo code for this is:
+
+load("data/staging/nba_reduced.csv")
+fill NaN with 0
+replace missing team with "Unknown Team"
+if fg_pct > 1: fg_pct = fg_pct / 100
+convert minutes to int
+remove invalid fg_pct
+save("data/staging/nba_cleansed.csv")
+
+Transform: The last step of our data preparation was to transform the cleansed NBA data into JSON format so it could be uploaded to MongoDB. Using Pandas in python, we read the cleaned CSV file and created a JSON record for each player's season. Each of the player's stats like points, rebounds, assists, turnovers, minutes were grouped into a stats section inside the JSON doc. After creating all the records, the script saves them in a file, and each line in the file is a complete JSON object (because this is the format MongoDB uses for large amounts of data.
+The pseudo code for this is:
+
+load("data/staging/nba_cleansed.csv")
+for each row:
+    player_id = slug(player_name)
+    record = {
+        "player_id": player_id,
+        "player_name": player_name,
+        "season": season,
+        "team": team,
+        "stats": {
+            "points": points,
+            "rebounds": rebounds,
+            "assists": assists,
+            "turnovers": turnovers,
+            "minutes": minutes,
+            "fg_pct": fg_pct,
+            "plus_minus": plus_minus
+        }
+    }
+write each record as JSON line
+save as "data/curated/nba_ready.jsonl"
+
+We developed a parser during the transformation step in order to convert the CSV data into a semi structured JSON format. The parser reads each row of the data set and generates a lowercase player id using the players name. It also organizes all the numeric stats into a "stats" section. Then, each record is written to the output file in JSON line format.
+Here is a code snippet from the source code that shows the loop.
+
+   for _, r in ch.iterrows():
+       rec = {
+           "player_id": slug(r["player_name"]),
+           "player_name": r["player_name"],
+           "season": int(r["season"]),
+           "team": r["team"],
+           "stats": {
+               "points": float(r["points"]),
+               "rebounds": float(r["rebounds"]),
+               "assists": float(r["assists"]),
+               "turnovers": float(r["turnovers"]),
+               "minutes": int(r["minutes"]),
+               "fg_pct": float(r["fg_pct"]),
+               "plus_minus": 0.0
+           }
+       }
+       f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
+Database System
+
+For this project, we decided to use MongoDB as our NoSQL database. It's a document based system, which means data is stored in flexible JSON like documents instead of tables with fixed columns. This works really well for our NBA dataset because each player has different kinds of stats that can change from season to season. MongoDB lets us store all of that information together in one place without worrying about strict table relationships or complex joins.
+
+Another big reason we chose MongoDB is because it scales easily when working with large amounts of data. It supports something called sharding which allows the database to split data across multiple servers. This means as our dataset grows, MongoDB can still handle it efficiently. It also has built in tools for indexing and running aggregation queries, which helps us analyze player performance quickly. Overall, MongoDB gives us the flexibility, speed, and scalability we need for managing and analyzing large sports datasets.
+
+For this project, each player's data is stored as a single document in MongoDB. This means all of their information like name, team, season, and stats is kept together instead of being split into separate tables. Our schema looks like this:
+
+{
+  "player_id": "string",
+  "player_name": "string",
+  "season": "integer",
+  "team": "string",
+  "stats": {
+    "points": "float",
+    "rebounds": "float",
+    "assists": "float",
+    "turnovers": "float",
+    "minutes": "integer",
+    "fg_pct": "float",
+    "plus_minus": "float"
+  }
+}
+
+This setup works well because it keeps everything related to a player in one place. The stats section groups all performance numbers together, which makes the data easier to read and update. It also fits naturally with the kinds of questions we want to ask, like "Which players had the highest efficiency this season?" or "What were the average points for each team?" MongoDB's structure lets us run these kinds of queries without complicated joins or table relationships.
+Another advantage is flexibility, if we ever want to add new stats, we can just include new fields without having to redesign the whole database. In short, this schema is simple, clear, and scalable for our NBA data analysis goals.
+
+Data Ingestion and Query
+
+Ingestion: We imported the final JSON Lines file into our local MongoDB database. We created a database named "nba" and a collection called "player_game_stats" and then loaded up all 9,716 player records. Each record was stored as a single document that matched our schema defined in the database system section with the player id, name, team, season, and the stats section with all the key performance metrics. Once we uploaded the data, we made sure the ingestion worked, checking the doc count and making sure all the right fields were there.
+Validation: To make sure our data was correctly stored, we ran queries to check how many total docs were in the collection, and also checked the structure of different records. These queries ended up showing us that our data was structured correctly because MongoDB showed that there were 9,716 total documents, 1,862 players, and data from 2010-2025.
+
+Performance results: The performance of our ingestion was very quick, and had 0 failed records. The queries that we used like filtering by season, or checking for players returned almost instantly. Our results would scale with data because MongoDB supports horizontal scaling, which means it can distribute data across multiple different servers instead of just 1. This means that the system can handle a lot larger data sets because as the amount of data grows, it just adds more servers to handle it. MongoDB is perfect for our project because overtime, player statistics will grow and the database will need to be able to handle that.
+
+Source Code - in GitHub repository: https://github.com/Melo-S/NBA-Performance-Analytics.git
