@@ -9,8 +9,6 @@ This project provides a data pipeline to process raw NBA player statistics into 
 
 ## Data Pipeline
 
-Note: Do not open or fully read raw CSVs; scripts stream with chunksize.
-
 Process data (streaming)
 
 python scripts/01_reduce.py
