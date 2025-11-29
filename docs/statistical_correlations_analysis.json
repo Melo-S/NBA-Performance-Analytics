@@ -1,0 +1,60 @@
+{
+  "correlation_analysis": {
+    "total_players": 7533,
+    "averages": {
+      "points": 9.76,
+      "rebounds": 4.03,
+      "assists": 2.19,
+      "turnovers": 1.28,
+      "minutes": 22.42,
+      "fg_pct": 0.452
+    },
+    "correlations": {
+      "points_rebounds": 0.498,
+      "points_assists": 0.61,
+      "turnovers_points": 0.781
+    }
+  },
+  "role_analysis": [
+    {
+      "role": "Role Player",
+      "player_count": 1648,
+      "avg_stats": {
+        "points": 9.8,
+        "rebounds": 3.9,
+        "assists": 2.2,
+        "minutes": 23.2
+      }
+    },
+    {
+      "role": "Scorer",
+      "player_count": 247,
+      "avg_stats": {
+        "points": 24.2,
+        "rebounds": 6.3,
+        "assists": 5.4,
+        "minutes": 33.7
+      }
+    },
+    {
+      "role": "Big Man",
+      "player_count": 129,
+      "avg_stats": {
+        "points": 13.4,
+        "rebounds": 10.0,
+        "assists": 2.4,
+        "minutes": 28.3
+      }
+    },
+    {
+      "role": "Playmaker",
+      "player_count": 73,
+      "avg_stats": {
+        "points": 14.4,
+        "rebounds": 4.4,
+        "assists": 7.1,
+        "minutes": 31.6
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+flask==3.1.0
+pandas==2.3.3
+pymongo==4.10.1
+psutil==7.1.3

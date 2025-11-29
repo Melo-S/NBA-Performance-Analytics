@@ -1,78 +1,108 @@
 # NBA Player Clustering Script
 # This script groups NBA players into 5 different categories based on their stats
-# Using K-means clustering algorithm from Apache Spark
+# Using K-means clustering algorithm from scikit-learn (fallback for PySpark issues)
 # Created by Data Titans team for Milestone 3
 
-from pyspark.sql import SparkSession
-from pyspark.ml.clustering import KMeans
-from pyspark.ml.feature import VectorAssembler
-from pyspark.ml.evaluation import ClusteringEvaluator
 import pandas as pd
-from pymongo import MongoClient
+import numpy as np
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import silhouette_score
+import json
+from pathlib import Path
 
-# 1: Set up Apache Spark
-# Spark is like a super-powered engine for processing big data
-# We need it because regular Python can't handle millions of rows efficiently
-spark = SparkSession.builder \
-    .appName("NBA Player Clustering") \
-    .getOrCreate()
+print("Starting NBA player clustering analysis...")
 
-print("Spark session started - ready to analyze NBA data!")
+# 1: Load our cleaned NBA data
+jsonl_file = Path("data/curated/nba_ready.jsonl")
 
-# 2: Load our cleaned NBA data
-# We're reading from the JSONL file we created earlier
-# This contains all the player stats in a format Spark can understand
-df = spark.read.json("data/curated/nba_ready.jsonl")
-print(f"Loaded {df.count()} player records from our dataset")
+if not jsonl_file.exists():
+    print("Error: JSONL file not found at {jsonl_file}")
+    print("Please run the data processing pipeline first (scripts 01-03)")
+    exit(1)
 
-# 3: Prepare the data for clustering
-# We need to pick which stats to use for grouping players
-# These are the key performance indicators that define different player types
-feature_cols = ["stats.points", "stats.rebounds", "stats.assists", "stats.turnovers", "stats.minutes"]
+print("Loading data from {jsonl_file}...")
+data = []
+with open(jsonl_file, 'r', encoding='utf-8') as f:
+    for line in f:
+        if line.strip():
+            data.append(json.loads(line))
 
-# The VectorAssembler combines all these stats into a single "feature vector"
-# Think of it like packing a suitcase - we put all the stats together for each player
-assembler = VectorAssembler(inputCols=feature_cols, outputCol="features")
-df_features = assembler.transform(df)
+df = pd.DataFrame(data)
+print(f"Loaded {len(df)} player records")
 
-print("Prepared features for clustering - each player now has a 'stat fingerprint'")
+# 2: Prepare the data for clustering
+# Filter for meaningful minutes and extract stats
+filtered_df = df[
+    (df['season'] >= 2010) &
+    (df['stats'].apply(lambda x: x['minutes'] > 10))
+].copy()
+
+# Extract features for clustering
+feature_cols = ["points", "rebounds", "assists", "turnovers", "minutes"]
+features = []
+for _, row in filtered_df.iterrows():
+    stats = row['stats']
+    features.append([
+        stats['points'],
+        stats['rebounds'],
+        stats['assists'],
+        stats['turnovers'],
+        stats['minutes']
+    ])
+
+X = np.array(features)
+print(f"Prepared {len(X)} samples for clustering")
+
+# 3: Standardize the features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+print("Features standardized for better clustering performance")
 
 # 4: Apply K-means clustering
-# K-means is like sorting players into 5 groups based on how similar their stats are
-# We chose 5 clusters because NBA players typically fall into categories like:
-# - Superstars, Role players, Bench players, etc.
-kmeans = KMeans().setK(5).setSeed(1)  # 5 clusters, seed=1 for consistent results
-model = kmeans.fit(df_features)
+# Using 5 clusters for different player types
+kmeans = KMeans(n_clusters=5, random_state=42, n_init=10)
+cluster_labels = kmeans.fit_predict(X_scaled)
 
-print("Training K-means model... this groups similar players together")
+print("Training K-means model... grouping similar players together")
 
-# 5: Get the clustering results
-# Now each player gets assigned to one of the 5 clusters
-predictions = model.transform(df_features)
+# 5: Evaluate clustering quality
+silhouette = silhouette_score(X_scaled, cluster_labels)
+print(f"Silhouette score: {silhouette:.3f} - measures clustering quality")
 
-# 6: Check how good our clustering is
-# Silhouette score tells us how well-separated the groups are
-# Higher scores (closer to 1.0) mean better clustering
-evaluator = ClusteringEvaluator()
-silhouette = evaluator.evaluate(predictions)
-print(f"Silhouette score: {silhouette:.3f} - this measures clustering quality")
-
-# 7: Show what each cluster represents
-# The cluster centers show the "average" stats for players in each group
-centers = model.clusterCenters()
+# 6: Show cluster centers (in original scale)
+centers_original = scaler.inverse_transform(kmeans.cluster_centers_)
 print("\nCluster Centers (average stats for each group):")
 print("Features: [points, rebounds, assists, turnovers, minutes]")
-for i, center in enumerate(centers):
-    print(f"Cluster {i}: {center}")
+for i, center in enumerate(centers_original):
+    print(f"Cluster {i}: [{center[0]:.1f}, {center[1]:.1f}, {center[2]:.1f}, {center[3]:.1f}, {center[4]:.1f}]")
 
-# 8: Save the results
-# We save the player names and their cluster assignments
-# This creates a Parquet file - it's like a super efficient spreadsheet for big data
-predictions.select("player_name", "prediction").write.mode("overwrite").parquet("data/processed/player_clusters.parquet")
+# 7: Add cluster assignments to dataframe
+filtered_df['cluster'] = cluster_labels
 
-print("Results saved! Check data/processed/player_clusters.parquet")
-print("Now we can see which players belong to which performance groups")
+# 8: Show sample players from each cluster
+print("\nSample players from each cluster:")
+for cluster_id in range(5):
+    cluster_players = filtered_df[filtered_df['cluster'] == cluster_id]
+    sample_players = cluster_players.head(3)['player_name'].tolist()
+    print(f"Cluster {cluster_id}: {', '.join(sample_players)}")
 
-# Clean up
-spark.stop()
-print("Spark session closed - all done!")
+# 9: Save results to JSON
+results = []
+for _, row in filtered_df.iterrows():
+    result = {
+        "player_name": row['player_name'],
+        "season": int(row['season']),
+        "team": row['team'],
+        "cluster": int(row['cluster']),
+        "stats": row['stats']
+    }
+    results.append(result)
+
+output_file = Path("docs/player_clusters.json")
+output_file.parent.mkdir(parents=True, exist_ok=True)
+
+with open(output_file, "w") as f:
+    json.dump(results, f, indent=2, default=str)
+
+print(f"\nResults saved to: {output_file}")

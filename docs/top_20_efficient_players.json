@@ -1,0 +1,262 @@
+[
+  {
+    "player_name": "Luka Don\u010di\u0107",
+    "season": 2024,
+    "team": "DAL",
+    "efficiency": 61.47,
+    "stats": {
+      "points": 33.9,
+      "rebounds": 9.2,
+      "assists": 9.8,
+      "minutes": 37,
+      "fg_pct": 0.487
+    }
+  },
+  {
+    "player_name": "Russell Westbrook",
+    "season": 2017,
+    "team": "OKC",
+    "efficiency": 60.35,
+    "stats": {
+      "points": 31.6,
+      "rebounds": 10.7,
+      "assists": 10.4,
+      "minutes": 34,
+      "fg_pct": 0.425
+    }
+  },
+  {
+    "player_name": "Joel Embiid",
+    "season": 2024,
+    "team": "PHI",
+    "efficiency": 59.89,
+    "stats": {
+      "points": 34.7,
+      "rebounds": 11.0,
+      "assists": 5.6,
+      "minutes": 33,
+      "fg_pct": 0.529
+    }
+  },
+  {
+    "player_name": "James Harden",
+    "season": 2019,
+    "team": "HOU",
+    "efficiency": 58.22,
+    "stats": {
+      "points": 36.1,
+      "rebounds": 6.6,
+      "assists": 7.5,
+      "minutes": 36,
+      "fg_pct": 0.442
+    }
+  },
+  {
+    "player_name": "Giannis Antetokounmpo",
+    "season": 2024,
+    "team": "MIL",
+    "efficiency": 58.01,
+    "stats": {
+      "points": 30.4,
+      "rebounds": 11.5,
+      "assists": 6.5,
+      "minutes": 35,
+      "fg_pct": 0.611
+    }
+  },
+  {
+    "player_name": "Nikola Joki\u0107",
+    "season": 2022,
+    "team": "DEN",
+    "efficiency": 57.93,
+    "stats": {
+      "points": 27.1,
+      "rebounds": 13.8,
+      "assists": 7.9,
+      "minutes": 33,
+      "fg_pct": 0.583
+    }
+  },
+  {
+    "player_name": "Luka Don\u010di\u0107",
+    "season": 2023,
+    "team": "DAL",
+    "efficiency": 57.56,
+    "stats": {
+      "points": 32.4,
+      "rebounds": 8.6,
+      "assists": 8.0,
+      "minutes": 36,
+      "fg_pct": 0.496
+    }
+  },
+  {
+    "player_name": "Giannis Antetokounmpo",
+    "season": 2023,
+    "team": "MIL",
+    "efficiency": 57.33,
+    "stats": {
+      "points": 31.1,
+      "rebounds": 11.8,
+      "assists": 5.7,
+      "minutes": 32,
+      "fg_pct": 0.553
+    }
+  },
+  {
+    "player_name": "Giannis Antetokounmpo",
+    "season": 2020,
+    "team": "MIL",
+    "efficiency": 57.23,
+    "stats": {
+      "points": 29.5,
+      "rebounds": 13.6,
+      "assists": 5.6,
+      "minutes": 30,
+      "fg_pct": 0.553
+    }
+  },
+  {
+    "player_name": "Nikola Joki\u0107",
+    "season": 2024,
+    "team": "DEN",
+    "efficiency": 57.03,
+    "stats": {
+      "points": 26.4,
+      "rebounds": 12.4,
+      "assists": 9.0,
+      "minutes": 34,
+      "fg_pct": 0.583
+    }
+  },
+  {
+    "player_name": "James Harden",
+    "season": 2020,
+    "team": "HOU",
+    "efficiency": 56.44,
+    "stats": {
+      "points": 34.3,
+      "rebounds": 6.6,
+      "assists": 7.5,
+      "minutes": 36,
+      "fg_pct": 0.444
+    }
+  },
+  {
+    "player_name": "James Harden",
+    "season": 2017,
+    "team": "HOU",
+    "efficiency": 56.4,
+    "stats": {
+      "points": 29.1,
+      "rebounds": 8.1,
+      "assists": 11.2,
+      "minutes": 36,
+      "fg_pct": 0.44
+    }
+  },
+  {
+    "player_name": "Joel Embiid",
+    "season": 2023,
+    "team": "PHI",
+    "efficiency": 56.38,
+    "stats": {
+      "points": 33.1,
+      "rebounds": 10.2,
+      "assists": 4.2,
+      "minutes": 34,
+      "fg_pct": 0.548
+    }
+  },
+  {
+    "player_name": "Giannis Antetokounmpo",
+    "season": 2022,
+    "team": "MIL",
+    "efficiency": 56.03,
+    "stats": {
+      "points": 29.9,
+      "rebounds": 11.6,
+      "assists": 5.8,
+      "minutes": 32,
+      "fg_pct": 0.553
+    }
+  },
+  {
+    "player_name": "Nikola Joki\u0107",
+    "season": 2023,
+    "team": "DEN",
+    "efficiency": 55.72,
+    "stats": {
+      "points": 24.5,
+      "rebounds": 11.8,
+      "assists": 9.8,
+      "minutes": 33,
+      "fg_pct": 0.632
+    }
+  },
+  {
+    "player_name": "Giannis Antetokounmpo",
+    "season": 2019,
+    "team": "MIL",
+    "efficiency": 55.08,
+    "stats": {
+      "points": 27.7,
+      "rebounds": 12.5,
+      "assists": 5.9,
+      "minutes": 32,
+      "fg_pct": 0.578
+    }
+  },
+  {
+    "player_name": "Luka Don\u010di\u0107",
+    "season": 2020,
+    "team": "DAL",
+    "efficiency": 54.93,
+    "stats": {
+      "points": 28.8,
+      "rebounds": 9.4,
+      "assists": 8.8,
+      "minutes": 33,
+      "fg_pct": 0.463
+    }
+  },
+  {
+    "player_name": "Joel Embiid",
+    "season": 2022,
+    "team": "PHI",
+    "efficiency": 54.79,
+    "stats": {
+      "points": 30.6,
+      "rebounds": 11.7,
+      "assists": 4.2,
+      "minutes": 33,
+      "fg_pct": 0.499
+    }
+  },
+  {
+    "player_name": "Nikola Joki\u0107",
+    "season": 2021,
+    "team": "DEN",
+    "efficiency": 54.56,
+    "stats": {
+      "points": 26.4,
+      "rebounds": 10.8,
+      "assists": 8.3,
+      "minutes": 34,
+      "fg_pct": 0.566
+    }
+  },
+  {
+    "player_name": "LeBron James",
+    "season": 2010,
+    "team": "CLE",
+    "efficiency": 54.53,
+    "stats": {
+      "points": 29.7,
+      "rebounds": 7.3,
+      "assists": 8.6,
+      "minutes": 39,
+      "fg_pct": 0.503
+    }
+  }
+]

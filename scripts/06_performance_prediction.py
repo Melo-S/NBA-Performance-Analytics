@@ -1,89 +1,147 @@
 # NBA Performance Prediction Script
 # This script predicts how many points a player will score based on their other stats
-# Using Linear Regression - a classic machine learning algorithm
+# Using Linear Regression from scikit-learn (fallback for PySpark issues)
 # Created by Data Titans team for Milestone 3
 
-from pyspark.sql import SparkSession
-from pyspark.ml.regression import LinearRegression
-from pyspark.ml.feature import VectorAssembler
-from pyspark.ml.evaluation import RegressionEvaluator
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.preprocessing import StandardScaler
+import json
+from pathlib import Path
 
-# 1: Set up Apache Spark
-# Same as clustering - we need Spark's power for machine learning on big datasets
-spark = SparkSession.builder \
-    .appName("NBA Performance Prediction") \
-    .getOrCreate()
+print("Starting NBA performance prediction analysis...")
 
-print("Spark session started - ready to predict NBA player points!")
+# 1: Load our cleaned NBA data
+jsonl_file = Path("data/curated/nba_ready.jsonl")
 
-# 2: Load our NBA data
-# Using the same cleaned dataset from our data pipeline
-df = spark.read.json("data/curated/nba_ready.jsonl")
-print(f"Loaded {df.count()} player records for prediction training")
+if not jsonl_file.exists():
+    print("Error: JSONL file not found at {jsonl_file}")
+    print("Please run the data processing pipeline first (scripts 01-03)")
+    exit(1)
 
-# 3: Prepare the data structure
-# Our JSON has nested stats, so we flatten them out
-# This makes it easier for the machine learning algorithm to work with
-df = df.select("player_id", "player_name", "season", "team", "stats.*")
-print("Flattened the nested stats structure")
+print("Loading data from {jsonl_file}...")
+data = []
+with open(jsonl_file, 'r', encoding='utf-8') as f:
+    for line in f:
+        if line.strip():
+            data.append(json.loads(line))
 
-# 4: Choose features for prediction
-# We're trying to predict POINTS using other stats as clues
-# Like: if a player grabs lots of rebounds and plays many minutes, they might score more
-feature_cols = ["rebounds", "assists", "turnovers", "minutes"]
+df = pd.DataFrame(data)
+print(f"Loaded {len(df)} player records")
 
-# VectorAssembler packages these features together for each player
-assembler = VectorAssembler(inputCols=feature_cols, outputCol="features")
-df_features = assembler.transform(df)
+# 2: Prepare the data for prediction
+# Filter for meaningful minutes and extract features
+filtered_df = df[
+    (df['season'] >= 2010) &
+    (df['stats'].apply(lambda x: x['minutes'] > 10))
+].copy()
 
-print("Prepared features - using rebounds, assists, turnovers, and minutes to predict points")
+# Extract features and target
+features = []
+targets = []
+player_info = []
 
-# 5: Split data for training and testing
-# We use 80% of data to teach the model, 20% to test how well it learned
-# randomSplit ensures we get a random mix, seed=1 makes results reproducible
-train_data, test_data = df_features.randomSplit([0.8, 0.2], seed=1)
-print(f"Training on {train_data.count()} records, testing on {test_data.count()} records")
+for _, row in filtered_df.iterrows():
+    stats = row['stats']
+    features.append([
+        stats['rebounds'],
+        stats['assists'],
+        stats['turnovers'],
+        stats['minutes']
+    ])
+    targets.append(stats['points'])
+    player_info.append({
+        'player_name': row['player_name'],
+        'season': int(row['season']),
+        'team': row['team'],
+        'actual_points': stats['points']
+    })
 
-# 6: Train the Linear Regression model
-# Linear regression finds the mathematical relationship: points = a*rebounds + b*assists + c*turnovers + d*minutes + e
-# The model "learns" the best values for a, b, c, d, e from our training data
-lr = LinearRegression(featuresCol="features", labelCol="points")
-lr_model = lr.fit(train_data)
+X = np.array(features)
+y = np.array(targets)
+
+print(f"Prepared {len(X)} samples for prediction")
+print("Features: rebounds, assists, turnovers, minutes")
+print("Target: points scored")
+
+# 3: Split data for training and testing
+X_train, X_test, y_train, y_test, info_train, info_test = train_test_split(
+    X, y, player_info, test_size=0.2, random_state=42
+)
+print(f"Training on {len(X_train)} records, testing on {len(X_test)} records")
+
+# 4: Standardize features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# 5: Train the Linear Regression model
+lr_model = LinearRegression()
+lr_model.fit(X_train_scaled, y_train)
 
 print("Training linear regression model... finding the relationship between stats and points")
 
-# 7: Test the model
-# Now we use the model to predict points for players it hasn't seen before (test set)
-predictions = lr_model.transform(test_data)
+# 6: Make predictions
+y_pred = lr_model.predict(X_test_scaled)
 
-# 8: Evaluate how good our predictions are
-# R² score: How much of the variation in points can we explain? (higher is better, max 1.0)
-# RMSE: Average prediction error in points (lower is better)
-evaluator = RegressionEvaluator(labelCol="points", predictionCol="prediction", metricName="r2")
-r2 = evaluator.evaluate(predictions)
-
-evaluator_rmse = RegressionEvaluator(labelCol="points", predictionCol="prediction", metricName="rmse")
-rmse = evaluator_rmse.evaluate(predictions)
+# 7: Evaluate the model
+r2 = r2_score(y_test, y_pred)
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
 
 print(f"R2 Score: {r2:.3f} - this shows how well we can predict points")
 print(f"RMSE: {rmse:.3f} points - average prediction error")
 
+# 8: Show model coefficients
+feature_names = ['rebounds', 'assists', 'turnovers', 'minutes']
+coefficients = lr_model.coef_
+intercept = lr_model.intercept_
+
+print(f"\nModel Equation: points = {intercept:.2f}")
+for name, coef in zip(feature_names, coefficients):
+    print(f"  + ({coef:.4f} × {name})")
+
 # 9: Show some example predictions
-# Let's see how our model did on a few real players
 print("\nSample Predictions (Actual vs Predicted points):")
-predictions.select("player_name", "points", "prediction").show(10)
+for i in range(min(10, len(y_test))):
+    player = info_test[i]
+    actual = y_test[i]
+    predicted = y_pred[i]
+    print(f"{player['player_name']} ({player['season']}): {actual:.1f} actual, {predicted:.1f} predicted")
 
-# 10: Save the trained model
-# This saves our "learned" relationship so we can use it later
-lr_model.write().overwrite().save("models/performance_prediction_model")
+# 10: Save model results
+results = {
+    'model_performance': {
+        'r2_score': r2,
+        'rmse': rmse,
+        'training_samples': len(X_train),
+        'testing_samples': len(X_test)
+    },
+    'coefficients': {
+        'intercept': intercept,
+        'features': dict(zip(feature_names, coefficients.tolist()))
+    },
+    'sample_predictions': []
+}
 
-print("Model saved! We can now predict NBA player points using their other stats")
-print("Check models/performance_prediction_model for the saved model")
+# Add sample predictions
+for i in range(min(20, len(y_test))):
+    player = info_test[i]
+    results['sample_predictions'].append({
+        'player_name': player['player_name'],
+        'season': player['season'],
+        'team': player['team'],
+        'actual_points': float(y_test[i]),
+        'predicted_points': float(y_pred[i]),
+        'error': float(abs(y_test[i] - y_pred[i]))
+    })
 
-# Clean up
-spark.stop()
-print("Spark session closed - prediction complete!")
+output_file = Path("docs/performance_predictions.json")
+output_file.parent.mkdir(parents=True, exist_ok=True)
 
-</final_file_content>
+with open(output_file, "w") as f:
+    json.dump(results, f, indent=2, default=str)
 
-IMPORTANT: For any future changes to this file, use the final_file_content shown above as your reference. This content reflects the current state of the file, including any auto-formatting (e.g., if you used single quotes but the formatter converted them to double quotes). Always base the SEARCH/REPLACE on this final version.
+print(f"\nResults saved to: {output_file}")

@@ -1,0 +1,179 @@
+{
+  "model_performance": {
+    "r2_score": 0.7978102212059124,
+    "rmse": 2.5899098225113906,
+    "training_samples": 6026,
+    "testing_samples": 1507
+  },
+  "coefficients": {
+    "intercept": 9.73576169930304,
+    "features": {
+      "rebounds": 0.15066839495517798,
+      "assists": -0.3630846571913384,
+      "turnovers": 2.182783380606419,
+      "minutes": 3.3006258824130805
+    }
+  },
+  "sample_predictions": [
+    {
+      "player_name": "Isaiah Roby",
+      "season": 2023,
+      "team": "SAS",
+      "actual_points": 4.1,
+      "predicted_points": 3.124257113205486,
+      "error": 0.9757428867945137
+    },
+    {
+      "player_name": "Jason Thompson",
+      "season": 2010,
+      "team": "SAC",
+      "actual_points": 12.5,
+      "predicted_points": 15.724530182611927,
+      "error": 3.224530182611927
+    },
+    {
+      "player_name": "Larry Sanders",
+      "season": 2015,
+      "team": "MIL",
+      "actual_points": 7.3,
+      "predicted_points": 8.678250946098071,
+      "error": 1.3782509460980714
+    },
+    {
+      "player_name": "David Andersen",
+      "season": 2011,
+      "team": "TOR",
+      "actual_points": 5.1,
+      "predicted_points": 4.114220405096412,
+      "error": 0.9857795949035877
+    },
+    {
+      "player_name": "James Ennis III",
+      "season": 2020,
+      "team": "PHI",
+      "actual_points": 5.8,
+      "predicted_points": 4.676928902111514,
+      "error": 1.1230710978884861
+    },
+    {
+      "player_name": "Patty Mills",
+      "season": 2014,
+      "team": "SAS",
+      "actual_points": 10.2,
+      "predicted_points": 6.325371634455001,
+      "error": 3.8746283655449982
+    },
+    {
+      "player_name": "Isaiah Stewart",
+      "season": 2024,
+      "team": "DET",
+      "actual_points": 10.9,
+      "predicted_points": 13.733874631112922,
+      "error": 2.8338746311129217
+    },
+    {
+      "player_name": "Mason Plumlee",
+      "season": 2023,
+      "team": "LAC",
+      "actual_points": 7.5,
+      "predicted_points": 8.544298887244079,
+      "error": 1.0442988872440786
+    },
+    {
+      "player_name": "Mike Bibby",
+      "season": 2010,
+      "team": "ATL",
+      "actual_points": 9.1,
+      "predicted_points": 10.793317433421256,
+      "error": 1.6933174334212566
+    },
+    {
+      "player_name": "Garrett Temple",
+      "season": 2010,
+      "team": "3TM",
+      "actual_points": 5.0,
+      "predicted_points": 4.363921559072693,
+      "error": 0.6360784409273066
+    },
+    {
+      "player_name": "Ben Gordon",
+      "season": 2011,
+      "team": "DET",
+      "actual_points": 11.2,
+      "predicted_points": 12.444207021190547,
+      "error": 1.2442070211905474
+    },
+    {
+      "player_name": "Elton Brand",
+      "season": 2015,
+      "team": "ATL",
+      "actual_points": 2.7,
+      "predicted_points": 3.5180375555776946,
+      "error": 0.8180375555776944
+    },
+    {
+      "player_name": "Eduardo N\u00e1jera",
+      "season": 2010,
+      "team": "DAL",
+      "actual_points": 3.3,
+      "predicted_points": 3.682718593369481,
+      "error": 0.3827185933694812
+    },
+    {
+      "player_name": "Martell Webster",
+      "season": 2012,
+      "team": "MIN",
+      "actual_points": 6.9,
+      "predicted_points": 9.852487075842786,
+      "error": 2.952487075842786
+    },
+    {
+      "player_name": "Jordan Farmar",
+      "season": 2016,
+      "team": "MEM",
+      "actual_points": 9.2,
+      "predicted_points": 10.75709459341546,
+      "error": 1.55709459341546
+    },
+    {
+      "player_name": "Isaiah Thomas",
+      "season": 2015,
+      "team": "2TM",
+      "actual_points": 16.4,
+      "predicted_points": 12.72583246341835,
+      "error": 3.674167536581649
+    },
+    {
+      "player_name": "Grant Williams",
+      "season": 2024,
+      "team": "CHO",
+      "actual_points": 13.9,
+      "predicted_points": 14.758416637402016,
+      "error": 0.8584166374020157
+    },
+    {
+      "player_name": "Jalen Smith",
+      "season": 2023,
+      "team": "IND",
+      "actual_points": 9.4,
+      "predicted_points": 7.590577180958402,
+      "error": 1.8094228190415986
+    },
+    {
+      "player_name": "Brandon Knight",
+      "season": 2012,
+      "team": "DET",
+      "actual_points": 12.8,
+      "predicted_points": 17.424620907028533,
+      "error": 4.6246209070285325
+    },
+    {
+      "player_name": "Deandre Ayton",
+      "season": 2021,
+      "team": "PHO",
+      "actual_points": 14.4,
+      "predicted_points": 14.315427242550946,
+      "error": 0.08457275744905424
+    }
+  ]
+}
